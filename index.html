@@ -1,10 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hans">
+
 <head>
     <meta charset="UTF-8">
-    <title>canvas-Painting</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no,initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <title>我的画板</title>
 </head>
-<body>
 
+<body>
+<canvas id="xxx" width="300" height="300"></canvas>
+
+<div id="actions" class="actions">
+    <svg id="pen" class="active icon" aria-hidden="true">
+        <use xlink:href="#icon-pen"></use>
+    </svg>
+    <svg id="eraser" class="icon" aria-hidden="true">
+        <use xlink:href="#icon-eraser"></use>
+    </svg>
+    <svg id="clear" class="clear" aria-hidden="true">
+        <use xlink:href="#icon-clear"></use>
+    </svg>
+    <svg id="download" class="save" aria-hidden="true">
+        <use xlink:href="#icon-save">save</use>
+    </svg>
+</div>
+<ol class="colors">
+    <li id="red" class="red"></li>
+    <li id="green" class="green"></li>
+    <li id="blue" class="blue"></li>
+</ol>
+<ol class="sizes">
+    <li id="thin" class="thin"></li>
+    <li id="thick" class="thick"></li>
+</ol>
+<script src="./js/index.js"></script>
+<script src="//at.alicdn.com/t/font_1158778_0j8565ytrbas.js"></script>
 </body>
+
 </html>
