@@ -1,6 +1,8 @@
-var paintPad = document.getElementById('xxx')
+var paintPad = document.getElementById('canvas')
 var context = paintPad.getContext('2d')
 var lineWidth = 5
+var color = [red, orange, yellow, green, blue, cyan, purple]
+var pens = [thin, thick, x3, x4, x5]
 
 autoSetCanvasSize(paintPad)
 
@@ -18,34 +20,11 @@ eraser.onclick = function () {
   pen.classList.remove('active')
 }
 
-red.onclick = function () {
-  context.fillStyle = 'red'
-  context.strokeStyle = 'red'
-  red.classList.add('active')
-  green.classList.remove('active')
-  blue.classList.remove('active')
-}
-green.onclick = function () {
-  context.fillStyle = 'green'
-  context.strokeStyle = 'green'
-  red.classList.remove('active')
-  green.classList.add('active')
-  blue.classList.remove('active')
-}
-blue.onclick = function () {
-  context.fillStyle = 'blue'
-  context.strokeStyle = 'blue'
-  red.classList.remove('active')
-  green.classList.remove('active')
-  blue.classList.add('active')
-}
+//绑定选中
+addSelected()
+//设置画笔
+setPenSize()
 
-thin.onclick = function () {
-  lineWidth = 5
-}
-thick.onclick = function () {
-  lineWidth = 10
-}
 
 clear.onclick = function () {
   context.clearRect(0, 0, paintPad.width, paintPad.height)
@@ -56,11 +35,38 @@ download.onclick = function () {
   var a = document.createElement('a')
   document.body.appendChild(a)
   a.href = url
-  a.download = '我的画儿'
+  a.download = 'pic'
   a.target = '_blank'
   a.click()
 }
-//函数
+
+function setPenSize() {
+  for (var i = 0; i < pens.length; i++) {
+    (function (n) {
+      pens[n].onclick = function () {
+        lineWidth = 5 * (n + 1)
+      }
+    }(i))
+  }
+}
+
+function addSelected() {
+  color.forEach(function (c) {
+    c.onclick = function () {
+      context.fillStyle = c.id;
+      context.strokeStyle = c.id;
+      removeSelected()
+      c.classList.add('active')
+    }
+  })
+}
+
+function removeSelected() {
+  color.forEach(function (c) {
+    c.classList.remove('active')
+  })
+}
+
 function autoSetCanvasSize(canvas) {
   SetCanvasSize()
 
@@ -92,13 +98,15 @@ function drawLine(x1, x2, y1, y2) {
   context.closePath()
   context.stroke()
 }
+
 function clearDraw(x, y, width = 20, height = 20) {
-  context.clearRect(x-width/2, y-height/2, width, height)
+  context.clearRect(x - width / 2, y - height / 2, width, height)
 }
+
 //监听用户
 function listenToUser(canvas) {
   var using = false
-  var lastPoint = { x: undefined, y: undefined }
+  var lastPoint = {x: undefined, y: undefined}
   //特性检测
   if (document.body.ontouchstart !== undefined) { // === null
     //  触屏设备
@@ -109,19 +117,21 @@ function listenToUser(canvas) {
       if (eraserEnabled) {
         clearDraw(x, y)
       } else {
-        lastPoint = { 'x': x, 'y': y }
+        lastPoint = {'x': x, 'y': y}
       }
     }
     canvas.ontouchmove = function (e) {
       var x = e.touches[0].clientX
       var y = e.touches[0].clientY
 
-      if (!using) { return }
+      if (!using) {
+        return
+      }
 
       if (eraserEnabled) {
         clearDraw(x, y)
       } else {
-        var newPoint = { 'x': x, 'y': y }
+        var newPoint = {'x': x, 'y': y}
         drawLine(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y)
         lastPoint = newPoint
       }
@@ -138,7 +148,7 @@ function listenToUser(canvas) {
       if (eraserEnabled) {
         clearDraw(x, y)
       } else {
-        lastPoint = { 'x': x, 'y': y }
+        lastPoint = {'x': x, 'y': y}
       }
     }
 
@@ -146,12 +156,14 @@ function listenToUser(canvas) {
       var x = e.clientX
       var y = e.clientY
 
-      if (!using) { return }
+      if (!using) {
+        return
+      }
 
       if (eraserEnabled) {
         clearDraw(x, y)
       } else {
-        var newPoint = { 'x': x, 'y': y }
+        var newPoint = {'x': x, 'y': y}
         drawLine(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y)
         lastPoint = newPoint
       }
